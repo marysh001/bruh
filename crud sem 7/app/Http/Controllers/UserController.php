@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class UserController extends Controller
 {
+    public function index()
+    {
+        return view('form');
+    }
     public function store(Request $request)
     {
-    //
-    $request->validate([
-    'name'=>'required',
-    'surname'=>'required',
-    'email'=>'required',
-    ]);
-    return User::create($request->all());
-    
+        $userData = ['username' => $request->username, 'email' => $request->email];
+
+        return response()->json($userData);
+    }
 }
