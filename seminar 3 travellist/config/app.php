@@ -1,5 +1,10 @@
 <?php
 
+use App\Providers\CustomLogsProvider;
+use App\Services\CustomLogServiceInterface;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
+
 return [
 
     /*
@@ -84,6 +89,11 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'aliases' => Facade::defaultAliases()->merge([
+        'FormBuilder' => Kris\LaravelFormBuilder\Facades\FormBuilder::class,
+        'PDF' =>  Barryvdh\DomPDF\Facade\Pdf::class
+    ])->toArray(),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
@@ -123,4 +133,30 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Autoloaded Service Providers
+    |--------------------------------------------------------------------------
+    |
+    | The service providers listed here will be automatically loaded on the
+    | request to your application. Feel free to add your own services to
+    | this array to grant expanded functionality to your applications.
+    |
+    */
+
+    'providers' => ServiceProvider::defaultProviders()->merge([
+        /*
+         * Package Service Providers...
+         */
+
+        /*
+         * Application Service Providers...
+         */
+        App\Providers\AppServiceProvider::class,
+        App\Providers\BladeHelperServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        CustomLogsProvider::class
+    ])->toArray(),
 ];

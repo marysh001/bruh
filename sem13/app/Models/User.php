@@ -4,9 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property string $email
+ * @property string $role
+ * @method static inRandomOrder()
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -21,6 +28,8 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    protected $with = ['hotels'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -43,5 +52,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return optional($this->role)->title === 'admin';
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hotels(): HasMany
+    {
+        return $this->hasMany(Hotel::class);
     }
 }
